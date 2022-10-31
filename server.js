@@ -166,29 +166,7 @@ const db2 =  mongoose.createConnection(mongodbconn2, {useNewUrlParser: true, use
 
 });
  
-
  
- 
-
-
-
-
-
-
-
-  
-
-   
-
-//////////////////////////////////////////////////////////////////////
-
-
- 
-
-    
-  
-
-
 });
 
 
@@ -222,6 +200,7 @@ app.get("/getallmessages/:fromuser/:chatroom" , function(request,response)
   
   
   })
+  
 
  
 
@@ -235,6 +214,79 @@ app.get("/getallmessages/:fromuser/:chatroom" , function(request,response)
 
 response.send(String("chatroom created"));
 });
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+app.get("/getuserprofile/:username",function(request,response){
+
+  var user = request.params.username;
+  
+ 
+  console.log(user);
+ 
+var userprofiledbname="user-profile"
+
+
+var mongodbconn3    = 'mongodb+srv://rmms:rmms@cluster0.5rfdysz.mongodb.net/'+userprofiledbname+'?retryWrites=true&w=majority';
+
+const db3 =  mongoose.createConnection(mongodbconn3, {useNewUrlParser: true, useUnifiedTopology: true});
+
+
+
+
+ const UserprofileSchema2 = new mongoose.Schema({
+  user_name: {
+    type: String,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  
+    allowedrooms: {
+      type: [String],
+      required: false,
+    },
+     dob:{
+       type: Date,
+       required: true,
+
+
+     }
+
+});
+
+const usermodel2 = db3.model("User-profile", UserprofileSchema2);
+
+usermodel2.find( {user_name: user }, function (err, docs) {
+ 
+ 
+  if (err){
+      console.log(err);
+  }
+  else{
+      console.log("First function call : ", docs);
+          
+
+  }
+   
+  console.log(docs);
+response.send( docs );
+
+db3.close(function () {
+  console.log('Mongoose default connection closed');
+});
+ 
+
+  
+
+
+});
+
+
+});
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 app.get("/auth/:uname/password/:password",function(request,response,next){
